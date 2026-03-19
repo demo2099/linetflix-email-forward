@@ -236,28 +236,28 @@ export default function DashboardPage() {
         {/* Stats Grid */}
         {stats && (
           <div className="dash-stats grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mb-5 sm:mb-8">
-            <div className="dash-stat-card bg-white rounded-xl shadow-sm sm:shadow p-4 sm:p-6 border-l-4 border-blue-500">
-              <p className="text-xs sm:text-sm font-medium text-slate-600">活跃邮件</p>
-              <p className="text-2xl sm:text-3xl font-bold text-slate-900 mt-1 sm:mt-2">{stats.activeEmails}</p>
-              <p className="text-xs text-slate-500 mt-1">未过期的邮件</p>
+            <div className="dash-stat-card dash-stat-blue bg-white rounded-xl shadow-sm sm:shadow p-4 sm:p-6 border-l-4 border-blue-500">
+              <p className="dash-stat-label text-xs sm:text-sm font-medium text-slate-600">活跃邮件</p>
+              <p className="dash-stat-value text-2xl sm:text-3xl font-bold text-slate-900 mt-1 sm:mt-2">{stats.activeEmails}</p>
+              <p className="dash-stat-note text-xs text-slate-500 mt-1">未过期的邮件</p>
             </div>
 
-            <div className="dash-stat-card bg-white rounded-xl shadow-sm sm:shadow p-4 sm:p-6 border-l-4 border-green-500">
-              <p className="text-xs sm:text-sm font-medium text-slate-600">总邮件数</p>
-              <p className="text-2xl sm:text-3xl font-bold text-slate-900 mt-1 sm:mt-2">{stats.totalEmails}</p>
-              <p className="text-xs text-slate-500 mt-1">所有已保存的邮件</p>
+            <div className="dash-stat-card dash-stat-green bg-white rounded-xl shadow-sm sm:shadow p-4 sm:p-6 border-l-4 border-green-500">
+              <p className="dash-stat-label text-xs sm:text-sm font-medium text-slate-600">总邮件数</p>
+              <p className="dash-stat-value text-2xl sm:text-3xl font-bold text-slate-900 mt-1 sm:mt-2">{stats.totalEmails}</p>
+              <p className="dash-stat-note text-xs text-slate-500 mt-1">所有已保存的邮件</p>
             </div>
 
-            <div className="dash-stat-card bg-white rounded-xl shadow-sm sm:shadow p-4 sm:p-6 border-l-4 border-purple-500">
-              <p className="text-xs sm:text-sm font-medium text-slate-600">启用规则</p>
-              <p className="text-2xl sm:text-3xl font-bold text-slate-900 mt-1 sm:mt-2">{stats.enabledRules}</p>
-              <p className="text-xs text-slate-500 mt-1">活跃的转发规则</p>
+            <div className="dash-stat-card dash-stat-purple bg-white rounded-xl shadow-sm sm:shadow p-4 sm:p-6 border-l-4 border-purple-500">
+              <p className="dash-stat-label text-xs sm:text-sm font-medium text-slate-600">启用规则</p>
+              <p className="dash-stat-value text-2xl sm:text-3xl font-bold text-slate-900 mt-1 sm:mt-2">{stats.enabledRules}</p>
+              <p className="dash-stat-note text-xs text-slate-500 mt-1">活跃的转发规则</p>
             </div>
 
-            <div className="dash-stat-card bg-white rounded-xl shadow-sm sm:shadow p-4 sm:p-6 border-l-4 border-orange-500">
-              <p className="text-xs sm:text-sm font-medium text-slate-600">总规则数</p>
-              <p className="text-2xl sm:text-3xl font-bold text-slate-900 mt-1 sm:mt-2">{stats.totalRules}</p>
-              <p className="text-xs text-slate-500 mt-1">配置的转发规则</p>
+            <div className="dash-stat-card dash-stat-orange bg-white rounded-xl shadow-sm sm:shadow p-4 sm:p-6 border-l-4 border-orange-500">
+              <p className="dash-stat-label text-xs sm:text-sm font-medium text-slate-600">总规则数</p>
+              <p className="dash-stat-value text-2xl sm:text-3xl font-bold text-slate-900 mt-1 sm:mt-2">{stats.totalRules}</p>
+              <p className="dash-stat-note text-xs text-slate-500 mt-1">配置的转发规则</p>
             </div>
           </div>
         )}
@@ -484,6 +484,7 @@ export default function DashboardPage() {
         .dash-root {
           min-height: 100vh;
           background: linear-gradient(135deg, #f8fafc 0%, #eef2ff 100%);
+          font-family: "PingFang SC", "Hiragino Sans GB", "Noto Sans CJK SC", "Microsoft YaHei", "Segoe UI", sans-serif;
         }
         .dash-header {
           background: rgba(255, 255, 255, 0.96);
@@ -500,15 +501,17 @@ export default function DashboardPage() {
         }
         .dash-title {
           margin: 0;
-          font-size: 30px;
+          font-size: 32px;
           line-height: 1.15;
-          font-weight: 800;
+          font-weight: 700;
+          letter-spacing: 0.5px;
           color: #0f172a;
         }
         .dash-subtitle {
           margin: 6px 0 0;
           color: #475569;
           font-size: 14px;
+          letter-spacing: 0.2px;
         }
         .dash-logout {
           border: none;
@@ -523,7 +526,7 @@ export default function DashboardPage() {
         .dash-main {
           max-width: 1200px;
           margin: 0 auto;
-          padding: 16px;
+          padding: 18px 16px;
         }
         .dash-stats {
           display: grid;
@@ -535,6 +538,41 @@ export default function DashboardPage() {
           background: #fff;
           border-radius: 14px;
           box-shadow: 0 2px 10px rgba(15, 23, 42, 0.08);
+          padding: 14px 14px 12px;
+        }
+        .dash-stat-blue {
+          background: linear-gradient(180deg, #eff6ff 0%, #ffffff 65%);
+        }
+        .dash-stat-green {
+          background: linear-gradient(180deg, #ecfdf5 0%, #ffffff 65%);
+        }
+        .dash-stat-purple {
+          background: linear-gradient(180deg, #f5f3ff 0%, #ffffff 65%);
+        }
+        .dash-stat-orange {
+          background: linear-gradient(180deg, #fff7ed 0%, #ffffff 65%);
+        }
+        .dash-stat-label {
+          margin: 0;
+          font-size: 12px;
+          color: #334155;
+          letter-spacing: 0.3px;
+          padding-left: 2px;
+        }
+        .dash-stat-value {
+          margin: 6px 0 4px;
+          font-size: 32px;
+          line-height: 1;
+          font-weight: 800;
+          color: #0f172a;
+          font-family: "DIN Alternate", "Avenir Next", "Segoe UI", sans-serif;
+          padding-left: 1px;
+        }
+        .dash-stat-note {
+          margin: 0;
+          font-size: 12px;
+          color: #64748b;
+          padding-left: 2px;
         }
         .dash-email-wrap {
           background: #fff;
@@ -543,7 +581,7 @@ export default function DashboardPage() {
           border: 1px solid #e2e8f0;
         }
         .dash-email-head {
-          padding: 14px 16px;
+          padding: 15px 18px;
           border-bottom: 1px solid #e2e8f0;
         }
         .dash-mobile-list {
@@ -593,6 +631,15 @@ export default function DashboardPage() {
           }
           .dash-subtitle {
             font-size: 15px;
+          }
+          .dash-stat-card {
+            padding: 18px 18px 16px;
+          }
+          .dash-stat-label {
+            font-size: 14px;
+          }
+          .dash-stat-note {
+            font-size: 12px;
           }
           .dash-mobile-list {
             display: none;
