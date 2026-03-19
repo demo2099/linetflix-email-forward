@@ -201,17 +201,17 @@ export default function DashboardPage() {
     });
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100">
+    <div className="dash-root min-h-screen bg-gradient-to-br from-slate-50 to-slate-100">
       {/* Header */}
-      <header className="sticky top-0 z-20 bg-white/95 backdrop-blur border-b border-slate-200 shadow-sm">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 sm:py-4 flex items-center justify-between gap-4">
-          <div className="min-w-0">
-            <h1 className="text-xl sm:text-2xl font-bold text-slate-900 truncate">邮件转发系统</h1>
-            <p className="text-xs sm:text-sm text-slate-600 mt-1 truncate">安全转发 Netflix 验证邮件</p>
+      <header className="dash-header sticky top-0 z-20 bg-white/95 backdrop-blur border-b border-slate-200 shadow-sm">
+        <div className="dash-header-inner max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 sm:py-4 flex items-center justify-between gap-4">
+          <div className="dash-title-wrap min-w-0">
+            <h1 className="dash-title text-xl sm:text-2xl font-bold text-slate-900 truncate">邮件转发系统</h1>
+            <p className="dash-subtitle text-xs sm:text-sm text-slate-600 mt-1 truncate">安全转发 Netflix 验证邮件</p>
           </div>
           <button
             onClick={handleLogout}
-            className="shrink-0 h-10 px-4 bg-red-600 hover:bg-red-700 text-white rounded-xl text-sm sm:text-base transition duration-200"
+            className="dash-logout shrink-0 h-10 px-4 bg-red-600 hover:bg-red-700 text-white rounded-xl text-sm sm:text-base transition duration-200"
           >
             登 出
           </button>
@@ -219,29 +219,29 @@ export default function DashboardPage() {
       </header>
 
       {/* Main Content */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5 sm:py-8">
+      <main className="dash-main max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5 sm:py-8">
         {/* Stats Grid */}
         {stats && (
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mb-5 sm:mb-8">
-            <div className="bg-white rounded-xl shadow-sm sm:shadow p-4 sm:p-6 border-l-4 border-blue-500">
+          <div className="dash-stats grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mb-5 sm:mb-8">
+            <div className="dash-stat-card bg-white rounded-xl shadow-sm sm:shadow p-4 sm:p-6 border-l-4 border-blue-500">
               <p className="text-xs sm:text-sm font-medium text-slate-600">活跃邮件</p>
               <p className="text-2xl sm:text-3xl font-bold text-slate-900 mt-1 sm:mt-2">{stats.activeEmails}</p>
               <p className="text-xs text-slate-500 mt-1">未过期的邮件</p>
             </div>
 
-            <div className="bg-white rounded-xl shadow-sm sm:shadow p-4 sm:p-6 border-l-4 border-green-500">
+            <div className="dash-stat-card bg-white rounded-xl shadow-sm sm:shadow p-4 sm:p-6 border-l-4 border-green-500">
               <p className="text-xs sm:text-sm font-medium text-slate-600">总邮件数</p>
               <p className="text-2xl sm:text-3xl font-bold text-slate-900 mt-1 sm:mt-2">{stats.totalEmails}</p>
               <p className="text-xs text-slate-500 mt-1">所有已保存的邮件</p>
             </div>
 
-            <div className="bg-white rounded-xl shadow-sm sm:shadow p-4 sm:p-6 border-l-4 border-purple-500">
+            <div className="dash-stat-card bg-white rounded-xl shadow-sm sm:shadow p-4 sm:p-6 border-l-4 border-purple-500">
               <p className="text-xs sm:text-sm font-medium text-slate-600">启用规则</p>
               <p className="text-2xl sm:text-3xl font-bold text-slate-900 mt-1 sm:mt-2">{stats.enabledRules}</p>
               <p className="text-xs text-slate-500 mt-1">活跃的转发规则</p>
             </div>
 
-            <div className="bg-white rounded-xl shadow-sm sm:shadow p-4 sm:p-6 border-l-4 border-orange-500">
+            <div className="dash-stat-card bg-white rounded-xl shadow-sm sm:shadow p-4 sm:p-6 border-l-4 border-orange-500">
               <p className="text-xs sm:text-sm font-medium text-slate-600">总规则数</p>
               <p className="text-2xl sm:text-3xl font-bold text-slate-900 mt-1 sm:mt-2">{stats.totalRules}</p>
               <p className="text-xs text-slate-500 mt-1">配置的转发规则</p>
@@ -251,14 +251,14 @@ export default function DashboardPage() {
 
         {/* Error Message */}
         {error && (
-          <div className="bg-red-50 border border-red-200 rounded-xl p-4 mb-5 sm:mb-6 text-red-700 text-sm">
+          <div className="dash-error bg-red-50 border border-red-200 rounded-xl p-4 mb-5 sm:mb-6 text-red-700 text-sm">
             {error}
           </div>
         )}
 
         {/* Emails */}
-        <div className="bg-white rounded-xl shadow-sm sm:shadow overflow-hidden">
-          <div className="px-4 sm:px-6 py-4 border-b border-slate-200">
+        <div className="dash-email-wrap bg-white rounded-xl shadow-sm sm:shadow overflow-hidden">
+          <div className="dash-email-head px-4 sm:px-6 py-4 border-b border-slate-200">
             <h2 className="text-lg font-semibold text-slate-900">收到的邮件</h2>
             <p className="text-sm text-slate-600 mt-1">最近 20 条邮件 · 保留 {expiryMinutes} 分钟</p>
           </div>
@@ -273,9 +273,9 @@ export default function DashboardPage() {
             </div>
           ) : (
             <>
-              <div className="md:hidden p-3 space-y-3 bg-slate-50/70">
+              <div className="dash-mobile-list md:hidden p-3 space-y-3 bg-slate-50/70">
                 {emails.map((email) => (
-                  <article key={email.id} className="bg-white border border-slate-200 rounded-xl p-3 shadow-sm">
+                  <article key={email.id} className="dash-email-card bg-white border border-slate-200 rounded-xl p-3 shadow-sm">
                     <div className="flex items-start justify-between gap-3">
                       <p className="text-sm font-semibold text-slate-900 truncate">{email.subject || '（无主题）'}</p>
                       <span className="text-[11px] text-slate-500 shrink-0">{formatRelativeTime(email.created_at)}</span>
@@ -286,14 +286,14 @@ export default function DashboardPage() {
                     <div className="mt-3 flex gap-2">
                       <button
                         onClick={() => handleViewEmail(email)}
-                        className="flex-1 h-9 rounded-lg bg-blue-600 text-white text-sm font-medium"
+                        className="dash-btn dash-btn-view flex-1 h-9 rounded-lg bg-blue-600 text-white text-sm font-medium"
                       >
                         查看
                       </button>
                       <button
                         onClick={() => handleDeleteEmail(email.id)}
                         disabled={deletingId === email.id}
-                        className="flex-1 h-9 rounded-lg border border-red-300 text-red-700 text-sm font-medium disabled:opacity-50"
+                        className="dash-btn dash-btn-del flex-1 h-9 rounded-lg border border-red-300 text-red-700 text-sm font-medium disabled:opacity-50"
                       >
                         {deletingId === email.id ? '删除中...' : '删除'}
                       </button>
@@ -467,6 +467,118 @@ export default function DashboardPage() {
           </div>
         </div>
       )}
+      <style jsx>{`
+        .dash-root {
+          min-height: 100vh;
+          background: linear-gradient(135deg, #f8fafc 0%, #eef2ff 100%);
+        }
+        .dash-header {
+          background: rgba(255, 255, 255, 0.96);
+          border-bottom: 1px solid #e2e8f0;
+        }
+        .dash-header-inner {
+          max-width: 1200px;
+          margin: 0 auto;
+          padding: 12px 16px;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 12px;
+        }
+        .dash-title {
+          margin: 0;
+          font-size: 30px;
+          line-height: 1.15;
+          font-weight: 800;
+          color: #0f172a;
+        }
+        .dash-subtitle {
+          margin: 6px 0 0;
+          color: #475569;
+          font-size: 14px;
+        }
+        .dash-logout {
+          border: none;
+          background: #dc2626;
+          color: #fff;
+          height: 40px;
+          padding: 0 14px;
+          border-radius: 12px;
+          font-weight: 700;
+          font-size: 14px;
+        }
+        .dash-main {
+          max-width: 1200px;
+          margin: 0 auto;
+          padding: 16px;
+        }
+        .dash-stats {
+          display: grid;
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+          gap: 10px;
+          margin-bottom: 14px;
+        }
+        .dash-stat-card {
+          background: #fff;
+          border-radius: 14px;
+          box-shadow: 0 2px 10px rgba(15, 23, 42, 0.08);
+        }
+        .dash-email-wrap {
+          background: #fff;
+          border-radius: 14px;
+          overflow: hidden;
+          border: 1px solid #e2e8f0;
+        }
+        .dash-email-head {
+          padding: 14px 16px;
+          border-bottom: 1px solid #e2e8f0;
+        }
+        .dash-mobile-list {
+          padding: 12px;
+          background: #f8fafc;
+        }
+        .dash-email-card {
+          background: #fff;
+          border: 1px solid #e2e8f0;
+          border-radius: 12px;
+          padding: 12px;
+        }
+        .dash-btn {
+          height: 36px;
+          border-radius: 10px;
+          font-size: 14px;
+          font-weight: 700;
+          border: none;
+        }
+        .dash-btn-view {
+          background: #2563eb;
+          color: #fff;
+        }
+        .dash-btn-del {
+          background: #fff;
+          color: #b91c1c;
+          border: 1px solid #fca5a5;
+        }
+        @media (min-width: 768px) {
+          .dash-main {
+            padding: 24px;
+          }
+          .dash-stats {
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 14px;
+            margin-bottom: 22px;
+          }
+          .dash-header-inner {
+            padding: 14px 24px;
+          }
+          .dash-title {
+            font-size: 40px;
+          }
+          .dash-subtitle {
+            font-size: 15px;
+          }
+        }
+      `}</style>
     </div>
   );
 }
