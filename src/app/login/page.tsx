@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 
 export default function LoginPage() {
@@ -44,17 +44,17 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 to-slate-800 flex items-center justify-center px-4">
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-900 to-blue-950 flex items-center justify-center px-4 py-6 sm:py-8">
       <div className="w-full max-w-md">
-        <div className="bg-white rounded-lg shadow-xl overflow-hidden">
+        <div className="bg-white/98 rounded-2xl shadow-2xl overflow-hidden border border-white/40">
           {/* Header */}
-          <div className="bg-gradient-to-r from-blue-600 to-blue-700 px-6 py-8">
-            <h1 className="text-2xl font-bold text-white">邮件转发系统</h1>
-            <p className="text-blue-100 text-sm mt-2">安全的 Netflix 邮件转发</p>
+          <div className="bg-gradient-to-r from-blue-600 to-blue-700 px-5 py-6 sm:px-6 sm:py-8">
+            <h1 className="text-2xl sm:text-3xl font-bold text-white tracking-tight">邮件转发系统</h1>
+            <p className="text-blue-100 text-sm sm:text-base mt-2">安全的 Netflix 邮件转发</p>
           </div>
 
           {/* Form */}
-          <form onSubmit={handleSubmit} className="p-6 space-y-4">
+          <form onSubmit={handleSubmit} className="p-5 sm:p-6 space-y-4">
             <div>
               <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-2">
                 密码
@@ -65,7 +65,7 @@ export default function LoginPage() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="输入访问密码"
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
+                className="w-full h-12 px-4 text-base border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
                 disabled={isLoading}
                 required
               />
@@ -80,14 +80,14 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg transition duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full h-12 bg-blue-600 hover:bg-blue-700 text-white text-base font-semibold rounded-xl transition duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {isLoading ? '验证中...' : '登 录'}
             </button>
           </form>
 
           {/* Footer */}
-          <div className="bg-gray-50 px-6 py-4 border-t border-gray-200">
+          <div className="bg-gray-50 px-5 py-4 sm:px-6 border-t border-gray-200">
             <p className="text-xs text-gray-600 text-center">
               转发的邮件仅保存 7 天，之后自动删除
             </p>

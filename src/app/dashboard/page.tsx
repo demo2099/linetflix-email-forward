@@ -194,18 +194,24 @@ export default function DashboardPage() {
     }
   };
 
+  const formatRelativeTime = (dateString: string) =>
+    formatDistanceToNow(new Date(dateString), {
+      addSuffix: true,
+      locale: zhCN,
+    });
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100">
       {/* Header */}
-      <header className="bg-white shadow-sm border-b border-slate-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
-          <div>
-            <h1 className="text-2xl font-bold text-slate-900">邮件转发系统</h1>
-            <p className="text-sm text-slate-600 mt-1">安全转发 Netflix 验证邮件</p>
+      <header className="sticky top-0 z-20 bg-white/95 backdrop-blur border-b border-slate-200 shadow-sm">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 sm:py-4 flex items-center justify-between gap-4">
+          <div className="min-w-0">
+            <h1 className="text-xl sm:text-2xl font-bold text-slate-900 truncate">邮件转发系统</h1>
+            <p className="text-xs sm:text-sm text-slate-600 mt-1 truncate">安全转发 Netflix 验证邮件</p>
           </div>
           <button
             onClick={handleLogout}
-            className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition duration-200"
+            className="shrink-0 h-10 px-4 bg-red-600 hover:bg-red-700 text-white rounded-xl text-sm sm:text-base transition duration-200"
           >
             登 出
           </button>
@@ -213,31 +219,31 @@ export default function DashboardPage() {
       </header>
 
       {/* Main Content */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5 sm:py-8">
         {/* Stats Grid */}
         {stats && (
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
-            <div className="bg-white rounded-lg shadow p-6 border-l-4 border-blue-500">
-              <p className="text-sm font-medium text-slate-600">活跃邮件</p>
-              <p className="text-3xl font-bold text-slate-900 mt-2">{stats.activeEmails}</p>
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mb-5 sm:mb-8">
+            <div className="bg-white rounded-xl shadow-sm sm:shadow p-4 sm:p-6 border-l-4 border-blue-500">
+              <p className="text-xs sm:text-sm font-medium text-slate-600">活跃邮件</p>
+              <p className="text-2xl sm:text-3xl font-bold text-slate-900 mt-1 sm:mt-2">{stats.activeEmails}</p>
               <p className="text-xs text-slate-500 mt-1">未过期的邮件</p>
             </div>
 
-            <div className="bg-white rounded-lg shadow p-6 border-l-4 border-green-500">
-              <p className="text-sm font-medium text-slate-600">总邮件数</p>
-              <p className="text-3xl font-bold text-slate-900 mt-2">{stats.totalEmails}</p>
+            <div className="bg-white rounded-xl shadow-sm sm:shadow p-4 sm:p-6 border-l-4 border-green-500">
+              <p className="text-xs sm:text-sm font-medium text-slate-600">总邮件数</p>
+              <p className="text-2xl sm:text-3xl font-bold text-slate-900 mt-1 sm:mt-2">{stats.totalEmails}</p>
               <p className="text-xs text-slate-500 mt-1">所有已保存的邮件</p>
             </div>
 
-            <div className="bg-white rounded-lg shadow p-6 border-l-4 border-purple-500">
-              <p className="text-sm font-medium text-slate-600">启用规则</p>
-              <p className="text-3xl font-bold text-slate-900 mt-2">{stats.enabledRules}</p>
+            <div className="bg-white rounded-xl shadow-sm sm:shadow p-4 sm:p-6 border-l-4 border-purple-500">
+              <p className="text-xs sm:text-sm font-medium text-slate-600">启用规则</p>
+              <p className="text-2xl sm:text-3xl font-bold text-slate-900 mt-1 sm:mt-2">{stats.enabledRules}</p>
               <p className="text-xs text-slate-500 mt-1">活跃的转发规则</p>
             </div>
 
-            <div className="bg-white rounded-lg shadow p-6 border-l-4 border-orange-500">
-              <p className="text-sm font-medium text-slate-600">总规则数</p>
-              <p className="text-3xl font-bold text-slate-900 mt-2">{stats.totalRules}</p>
+            <div className="bg-white rounded-xl shadow-sm sm:shadow p-4 sm:p-6 border-l-4 border-orange-500">
+              <p className="text-xs sm:text-sm font-medium text-slate-600">总规则数</p>
+              <p className="text-2xl sm:text-3xl font-bold text-slate-900 mt-1 sm:mt-2">{stats.totalRules}</p>
               <p className="text-xs text-slate-500 mt-1">配置的转发规则</p>
             </div>
           </div>
@@ -245,16 +251,16 @@ export default function DashboardPage() {
 
         {/* Error Message */}
         {error && (
-          <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-6 text-red-700">
+          <div className="bg-red-50 border border-red-200 rounded-xl p-4 mb-5 sm:mb-6 text-red-700 text-sm">
             {error}
           </div>
         )}
 
-        {/* Emails Table */}
-        <div className="bg-white rounded-lg shadow overflow-hidden">
-          <div className="px-6 py-4 border-b border-slate-200">
+        {/* Emails */}
+        <div className="bg-white rounded-xl shadow-sm sm:shadow overflow-hidden">
+          <div className="px-4 sm:px-6 py-4 border-b border-slate-200">
             <h2 className="text-lg font-semibold text-slate-900">收到的邮件</h2>
-            <p className="text-sm text-slate-600 mt-1">最近 20 条邮件</p>
+            <p className="text-sm text-slate-600 mt-1">最近 20 条邮件 · 保留 {expiryMinutes} 分钟</p>
           </div>
 
           {isLoading ? (
@@ -266,8 +272,38 @@ export default function DashboardPage() {
               <p className="text-slate-500">暂无邮件</p>
             </div>
           ) : (
-            <div className="overflow-x-auto">
-              <table className="w-full">
+            <>
+              <div className="md:hidden p-3 space-y-3 bg-slate-50/70">
+                {emails.map((email) => (
+                  <article key={email.id} className="bg-white border border-slate-200 rounded-xl p-3 shadow-sm">
+                    <div className="flex items-start justify-between gap-3">
+                      <p className="text-sm font-semibold text-slate-900 truncate">{email.subject || '（无主题）'}</p>
+                      <span className="text-[11px] text-slate-500 shrink-0">{formatRelativeTime(email.created_at)}</span>
+                    </div>
+                    <p className="text-xs text-slate-600 mt-2 break-all">发件人：{email.from_addr}</p>
+                    <p className="text-xs text-slate-600 mt-1 break-all">转发至：{email.forwarded_to}</p>
+                    <p className="text-xs text-slate-500 mt-1">过期：{formatRelativeTime(email.expires_at)}</p>
+                    <div className="mt-3 flex gap-2">
+                      <button
+                        onClick={() => handleViewEmail(email)}
+                        className="flex-1 h-9 rounded-lg bg-blue-600 text-white text-sm font-medium"
+                      >
+                        查看
+                      </button>
+                      <button
+                        onClick={() => handleDeleteEmail(email.id)}
+                        disabled={deletingId === email.id}
+                        className="flex-1 h-9 rounded-lg border border-red-300 text-red-700 text-sm font-medium disabled:opacity-50"
+                      >
+                        {deletingId === email.id ? '删除中...' : '删除'}
+                      </button>
+                    </div>
+                  </article>
+                ))}
+              </div>
+
+              <div className="hidden md:block overflow-x-auto">
+                <table className="w-full">
                 <thead className="bg-slate-50 border-b border-slate-200">
                   <tr>
                     <th className="px-6 py-3 text-left text-xs font-medium text-slate-700 uppercase tracking-wider">
@@ -303,16 +339,10 @@ export default function DashboardPage() {
                         {email.forwarded_to}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-600">
-                        {formatDistanceToNow(new Date(email.created_at), {
-                          addSuffix: true,
-                          locale: zhCN,
-                        })}
+                        {formatRelativeTime(email.created_at)}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-600">
-                        {formatDistanceToNow(new Date(email.expires_at), {
-                          addSuffix: true,
-                          locale: zhCN,
-                        })}
+                        {formatRelativeTime(email.expires_at)}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm space-x-3">
                         <button
@@ -332,19 +362,20 @@ export default function DashboardPage() {
                     </tr>
                   ))}
                 </tbody>
-              </table>
-            </div>
+                </table>
+              </div>
+            </>
           )}
         </div>
       </main>
 
       {/* Email Details Modal */}
       {isModalOpen && selectedEmail && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-lg shadow-xl max-w-2xl w-full max-h-[80vh] overflow-y-auto">
+        <div className="fixed inset-0 bg-black/55 flex items-end sm:items-center justify-center p-0 sm:p-4 z-50">
+          <div className="bg-white rounded-t-2xl sm:rounded-lg shadow-xl max-w-2xl w-full max-h-[92vh] sm:max-h-[80vh] overflow-y-auto">
             {/* Modal Header */}
-            <div className="sticky top-0 bg-gradient-to-r from-blue-600 to-blue-700 px-6 py-4 flex justify-between items-center">
-              <h3 className="text-xl font-bold text-white">邮件详情</h3>
+            <div className="sticky top-0 bg-gradient-to-r from-blue-600 to-blue-700 px-4 sm:px-6 py-4 flex justify-between items-center">
+              <h3 className="text-lg sm:text-xl font-bold text-white">邮件详情</h3>
               <button
                 onClick={closeModal}
                 className="text-white hover:text-blue-100 text-2xl leading-none"
@@ -354,7 +385,7 @@ export default function DashboardPage() {
             </div>
 
             {/* Modal Content */}
-            <div className="p-6 space-y-4">
+            <div className="p-4 sm:p-6 space-y-4">
               <div>
                 <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider">
                   发件人
@@ -407,7 +438,7 @@ export default function DashboardPage() {
                 <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider">
                   邮件内容
                 </p>
-                <div className="bg-slate-50 p-4 rounded-lg mt-2 border border-slate-200 max-h-96 overflow-y-auto">
+                <div className="bg-slate-50 p-3 sm:p-4 rounded-lg mt-2 border border-slate-200 max-h-96 overflow-y-auto">
                   {selectedEmail.html_body ? (
                     <div 
                       className="prose prose-sm max-w-none" 
@@ -425,7 +456,7 @@ export default function DashboardPage() {
             </div>
 
             {/* Modal Footer */}
-            <div className="bg-slate-50 px-6 py-4 border-t border-slate-200 flex justify-end gap-3">
+            <div className="bg-slate-50 px-4 sm:px-6 py-4 border-t border-slate-200 flex justify-end gap-3">
               <button
                 onClick={closeModal}
                 className="px-4 py-2 bg-slate-300 hover:bg-slate-400 text-slate-900 rounded-lg transition duration-200 font-medium"

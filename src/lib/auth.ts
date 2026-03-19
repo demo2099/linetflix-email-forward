@@ -12,45 +12,145 @@ export function hashPassword(password: string): string {
 }
 
 /**
- * 验证密码
- * 用户在环境变量中配置明文密码，系统自动进行 SHA-256 加密后比较
+ * 从环境变量读取多密码配置：
+ * 1) ADMIN_PASSWORDS: 逗号/换行分隔（推荐）
+ * 2) ADMIN_PASSWORD: 单密码（兼容旧版本）
  */
-export function validatePassword(password: string): boolean {
-  const plainPassword = process.env.ADMIN_PASSWORD;
-
-  // 如果没有配置密码，拒绝登录
-  if (!plainPassword) {
-    console.error('No password configured in environment (ADMIN_PASSWORD)');
-    console.error('Available env vars:', Object.keys(process.env).filter(k => k.includes('ADMIN') || k.includes('PASSWORD')));
-    return false;
+function getConfiguredPasswords(): string[] {
+  const multiple = process.env.ADMIN_PASSWORDS;
+  if (multiple && multiple.trim().length > 0) {
+    return multiple
+      .split(/[,\n]/)
+      .map((item) => item.trim())
+      .filter(Boolean);
   }
 
-  // 将用户配置的明文密码和输入的密码都进行哈希后比较
-  const storedPasswordHash = hashPassword(plainPassword);
-  const inputPasswordHash = hashPassword(password);
+  const single = process.env.ADMIN_PASSWORD;
+  if (single && single.trim().length > 0) {
+    return [single.trim()];
+  }
 
-  console.log('Password validation:', {
-    configured: !!plainPassword,
-    configuredHash: storedPasswordHash.substring(0, 10) + '...',
-    inputHash: inputPasswordHash.substring(0, 10) + '...',
-    match: storedPasswordHash === inputPasswordHash
-  });
+  return [];
+}
 
-  return storedPasswordHash === inputPasswordHash;
+function getConfiguredPasswordHashes(): string[] {
+  return getConfiguredPasswords().map(hashPassword);
+}
+
+function getSessionTtlSeconds(): number {
+  const ttl = parseInt(process.env.SESSION_TTL_SECONDS || '86400', 10);
+  if (Number.isNaN(ttl) || ttl <= 0) {
+    return 86400;
+  }
+  return ttl;
+}
+
+function getSessionSecret(): string {
+  const envSecret = process.env.SESSION_SECRET || process.env.AUTH_SECRET || process.env.WEBHOOK_API_KEY;
+  if (envSecret && envSecret.trim().length > 0) {
+    return envSecret;
+  }
+
+  // 兜底：无显式密钥时仍可工作，但重启后会失效，不建议生产使用
+  return hashPassword(`fallback-secret:${process.cwd()}`);
+}
+
+function signPayload(payloadBase64Url: string): string {
+  return crypto
+    .createHmac('sha256', getSessionSecret())
+    .update(payloadBase64Url)
+    .digest('base64url');
+}
+
+function safeEqual(a: string, b: string): boolean {
+  const aBuf = Buffer.from(a);
+  const bBuf = Buffer.from(b);
+  if (aBuf.length !== bBuf.length) return false;
+  return crypto.timingSafeEqual(aBuf, bBuf);
+}
+
+export function getBearerToken(authorizationHeader: string | null): string | null {
+  if (!authorizationHeader || !authorizationHeader.startsWith('Bearer ')) {
+    return null;
+  }
+  return authorizationHeader.slice('Bearer '.length).trim() || null;
 }
 
 /**
- * 生成会话令牌（简单实现）
+ * 验证密码，返回匹配密码的哈希；不匹配返回 null
  */
-export function generateSessionToken(): string {
-  return Buffer.from(Date.now() + '-' + Math.random()).toString('base64');
+export function authenticatePassword(password: string): string | null {
+  const configuredHashes = getConfiguredPasswordHashes();
+  if (configuredHashes.length === 0) {
+    console.error('No password configured in environment (ADMIN_PASSWORDS or ADMIN_PASSWORD)');
+    return null;
+  }
+
+  const inputHash = hashPassword(password);
+  const matched = configuredHashes.find((hash) => safeEqual(hash, inputHash));
+  return matched || null;
+}
+
+/**
+ * 兼容旧调用
+ */
+export function validatePassword(password: string): boolean {
+  return !!authenticatePassword(password);
+}
+
+/**
+ * 生成会话令牌（包含密码哈希指纹）
+ */
+export function generateSessionToken(passwordHash: string): string {
+  const now = Math.floor(Date.now() / 1000);
+  const payload = {
+    pwd: passwordHash,
+    iat: now,
+    exp: now + getSessionTtlSeconds(),
+    nonce: crypto.randomBytes(8).toString('hex'),
+  };
+
+  const payloadBase64Url = Buffer.from(JSON.stringify(payload), 'utf8').toString('base64url');
+  const signature = signPayload(payloadBase64Url);
+  return `${payloadBase64Url}.${signature}`;
 }
 
 /**
  * 验证会话令牌
  */
 export function validateSessionToken(token: string): boolean {
-  // 这是一个简单的实现，生产环境应使用 JWT 或更安全的方案
-  // 为简化起见，这里只检查令牌是否存在且不为空
-  return !!token && token.length > 0;
+  if (!token) return false;
+
+  const parts = token.split('.');
+  if (parts.length !== 2) return false;
+
+  const [payloadBase64Url, signature] = parts;
+  const expectedSignature = signPayload(payloadBase64Url);
+  if (!safeEqual(signature, expectedSignature)) {
+    return false;
+  }
+
+  try {
+    const payloadRaw = Buffer.from(payloadBase64Url, 'base64url').toString('utf8');
+    const payload = JSON.parse(payloadRaw) as {
+      pwd?: string;
+      exp?: number;
+    };
+
+    if (!payload.pwd || !payload.exp) {
+      return false;
+    }
+
+    const now = Math.floor(Date.now() / 1000);
+    if (payload.exp <= now) {
+      return false;
+    }
+
+    // 核心逻辑：会话绑定到具体密码哈希。
+    // 当管理员移除某个密码后，该密码签发的会话将立即失效。
+    const configuredHashes = getConfiguredPasswordHashes();
+    return configuredHashes.some((hash) => safeEqual(hash, payload.pwd!));
+  } catch {
+    return false;
+  }
 }

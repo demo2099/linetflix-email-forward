@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { deleteEmailById } from '@/lib/db/queries';
+import { getBearerToken, validateSessionToken } from '@/lib/auth';
 
 /**
  * 删除指定邮件
@@ -9,6 +10,14 @@ export async function DELETE(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const token = getBearerToken(request.headers.get('authorization'));
+    if (!token || !validateSessionToken(token)) {
+      return NextResponse.json(
+        { success: false, error: 'Unauthorized' },
+        { status: 401 }
+      );
+    }
+
     const { id: idStr } = await params;
     const id = parseInt(idStr, 10);
 

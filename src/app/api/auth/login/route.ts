@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { validatePassword } from '@/lib/auth';
+import { authenticatePassword, generateSessionToken } from '@/lib/auth';
 
 /**
  * POST /api/auth/login
@@ -16,20 +16,16 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    if (!validatePassword(password)) {
+    const matchedPasswordHash = authenticatePassword(password);
+    if (!matchedPasswordHash) {
       return NextResponse.json(
         { success: false, error: 'Invalid password' },
         { status: 401 }
       );
     }
 
-    // 生成简单的会话令牌
-    const token = Buffer.from(
-      JSON.stringify({
-        timestamp: Date.now(),
-        random: Math.random(),
-      })
-    ).toString('base64');
+    // 生成签名会话令牌，并绑定到当前使用的密码哈希
+    const token = generateSessionToken(matchedPasswordHash);
 
     return NextResponse.json({
       success: true,

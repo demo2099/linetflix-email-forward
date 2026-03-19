@@ -44,7 +44,8 @@ Worker 转发到你的网站
 
 | 环境变量 | 值 | 说明 |
 |---------|-----|-----|
-| `ADMIN_PASSWORD` | `your-password` | ⚠️ 必填：登录密码（建议使用复杂密码） |
+| `ADMIN_PASSWORDS` | `pass1,pass2` | ⚠️ 必填（推荐）：多用户密码，逗号分隔 |
+| `ADMIN_PASSWORD` | `your-password` | 可选：单密码（兼容旧版本） |
 | `WEBHOOK_API_KEY` | `your-api-key` | ⚠️ 必填：API 密钥（建议使用复杂字符串，见下方说明） |
 | `EMAIL_EXPIRY_MINUTES` | `30` | 可选：邮件过期时间（分钟） |
 
@@ -165,8 +166,11 @@ nano .env.local  # 编辑配置文件
 
 **编辑 `.env.local`**（必须修改）：
 ```env
-# 登录密码（必改！）
-ADMIN_PASSWORD=your-strong-password-here
+# 登录密码（推荐多用户）
+ADMIN_PASSWORDS=user1-pass,user2-pass
+
+# 兼容旧版本（单密码）
+# ADMIN_PASSWORD=your-strong-password-here
 
 # API 密钥（必改！使用下方命令生成）
 WEBHOOK_API_KEY=your-generated-api-key-here
@@ -385,7 +389,7 @@ pm2 save
 
 ### 必须配置
 
-1. **强密码**：修改 `.env.local` 中的 `ADMIN_PASSWORD` 为复杂密码（系统自动 SHA-256 加密）
+1. **强密码**：优先使用 `ADMIN_PASSWORDS` 配置多个复杂密码（系统自动 SHA-256 加密比较）
 2. **强 API Key**：使用 `openssl rand -base64 32` 生成随机密钥，或自定义复杂字符串（至少16位，包含大小写字母、数字、符号）
 3. **HTTPS**：生产环境必须启用 HTTPS（Vercel 自动提供，服务器部署需配置 Nginx/Caddy）
 
@@ -413,7 +417,7 @@ pm2 save
 **症状**：输入密码后提示"密码错误"
 
 **解决方案**：
-1. 确认 `.env.local`（或 Vercel 环境变量）中已设置 `ADMIN_PASSWORD`
+1. 确认 `.env.local`（或 Vercel 环境变量）中已设置 `ADMIN_PASSWORDS`（或兼容用 `ADMIN_PASSWORD`）
 2. 重新部署应用（Vercel 需重新部署，服务器需 `pm2 restart`）
 3. 清除浏览器缓存和 localStorage
 4. 检查日志：Vercel 查看 Functions 日志，服务器执行 `pm2 logs email-forward`
@@ -434,7 +438,7 @@ pm2 save
 **症状**：部署成功但访问报 500 错误
 
 **解决方案**：
-1. 检查环境变量是否都已配置（尤其是 `ADMIN_PASSWORD` 和 `WEBHOOK_API_KEY`）
+1. 检查环境变量是否都已配置（尤其是 `ADMIN_PASSWORDS`/`ADMIN_PASSWORD` 和 `WEBHOOK_API_KEY`）
 2. 查看 Vercel Functions 日志：Dashboard → Deployment → Functions
 3. 确认使用 Node.js 20.x 运行时
 4. 重新部署（Vercel Dashboard → Deployments → Redeploy）

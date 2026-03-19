@@ -6,14 +6,15 @@ import {
   getDatabaseStats,
   deleteExpiredEmails
 } from '@/lib/db/queries';
+import { getBearerToken, validateSessionToken } from '@/lib/auth';
 
 /**
  * 验证会话令牌
  */
 function isAuthenticated(request: NextRequest): boolean {
-  const token = request.headers.get('authorization')?.replace('Bearer ', '');
-  // 简单的令牌验证，生产环境应使用更安全的方案
-  return !!token;
+  const token = getBearerToken(request.headers.get('authorization'));
+  if (!token) return false;
+  return validateSessionToken(token);
 }
 
 /**

@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { getBearerToken, validateSessionToken } from '@/lib/auth';
 
 /**
  * 获取系统配置信息
@@ -6,8 +7,8 @@ import { NextRequest, NextResponse } from 'next/server';
 export async function GET(request: NextRequest) {
   try {
     // 验证 token（可选，根据需要添加）
-    const authHeader = request.headers.get('authorization');
-    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    const token = getBearerToken(request.headers.get('authorization'));
+    if (!token || !validateSessionToken(token)) {
       return NextResponse.json(
         { success: false, error: 'Unauthorized' },
         { status: 401 }
