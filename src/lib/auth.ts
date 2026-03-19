@@ -17,17 +17,21 @@ export function hashPassword(password: string): string {
  * 2) ADMIN_PASSWORD: 单密码（兼容旧版本）
  */
 function getConfiguredPasswords(): string[] {
-  const multiple = process.env.ADMIN_PASSWORDS;
-  if (multiple && multiple.trim().length > 0) {
-    return multiple
+  const parseList = (value: string): string[] =>
+    value
       .split(/[,\n]/)
       .map((item) => item.trim())
       .filter(Boolean);
+
+  const multiple = process.env.ADMIN_PASSWORDS;
+  if (multiple && multiple.trim().length > 0) {
+    return parseList(multiple);
   }
 
   const single = process.env.ADMIN_PASSWORD;
   if (single && single.trim().length > 0) {
-    return [single.trim()];
+    // 兼容误配置：即使填在 ADMIN_PASSWORD，也支持逗号/换行多密码
+    return parseList(single);
   }
 
   return [];
