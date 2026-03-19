@@ -200,6 +200,19 @@ export default function DashboardPage() {
       locale: zhCN,
     });
 
+  const retentionText = (() => {
+    if (expiryMinutes >= 60 * 24 * 365) {
+      return `保留 ${Math.round(expiryMinutes / (60 * 24 * 365))} 年`;
+    }
+    if (expiryMinutes >= 60 * 24) {
+      return `保留 ${Math.round(expiryMinutes / (60 * 24))} 天`;
+    }
+    if (expiryMinutes >= 60) {
+      return `保留 ${Math.round(expiryMinutes / 60)} 小时`;
+    }
+    return `保留 ${expiryMinutes} 分钟`;
+  })();
+
   return (
     <div className="dash-root min-h-screen bg-gradient-to-br from-slate-50 to-slate-100">
       {/* Header */}
@@ -260,7 +273,7 @@ export default function DashboardPage() {
         <div className="dash-email-wrap bg-white rounded-xl shadow-sm sm:shadow overflow-hidden">
           <div className="dash-email-head px-4 sm:px-6 py-4 border-b border-slate-200">
             <h2 className="text-lg font-semibold text-slate-900">收到的邮件</h2>
-            <p className="text-sm text-slate-600 mt-1">最近 20 条邮件 · 保留 {expiryMinutes} 分钟</p>
+            <p className="text-sm text-slate-600 mt-1">最近 20 条邮件 · {retentionText}</p>
           </div>
 
           {isLoading ? (
@@ -302,7 +315,7 @@ export default function DashboardPage() {
                 ))}
               </div>
 
-              <div className="hidden md:block overflow-x-auto">
+              <div className="dash-desktop-table hidden md:block overflow-x-auto">
                 <table className="w-full">
                 <thead className="bg-slate-50 border-b border-slate-200">
                   <tr>
@@ -534,8 +547,12 @@ export default function DashboardPage() {
           border-bottom: 1px solid #e2e8f0;
         }
         .dash-mobile-list {
+          display: block;
           padding: 12px;
           background: #f8fafc;
+        }
+        .dash-desktop-table {
+          display: none;
         }
         .dash-email-card {
           background: #fff;
@@ -576,6 +593,12 @@ export default function DashboardPage() {
           }
           .dash-subtitle {
             font-size: 15px;
+          }
+          .dash-mobile-list {
+            display: none;
+          }
+          .dash-desktop-table {
+            display: block;
           }
         }
       `}</style>
